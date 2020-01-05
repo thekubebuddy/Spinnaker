@@ -11,7 +11,7 @@ Table of Content
 * Spinnaker Artifacts helps to pull the objects from the external resources, which can be further used in spinnaker pipeline.
 * It could be a docker image, manifest file stored in VCS or an AMI 
 * All the configuration of Spinnaker is solely managed by its **"halyard"** component, which is the centralized hub for managing spinnaker.
-* For the artifact account, make sure you either generated the authentication token or auth through the username and password,specially for bitbucket you will be needing password.
+* For the artifact account configuration, make sure you either generated the authentication token or auth through the username and password,specially for bitbucket you will be needing password.
 * Usecase: The github or any other VCS can be used to store the k8s manifest file which can be used further.
 
 1. Configuring github/gitlab/bitbucket as an Artifact account
@@ -42,8 +42,7 @@ hal config artifact github account delete $ARTIFACT_ACCOUNT_NAME
 
 ### Spin CLI
 1. CLI configuration
-* Its better to configure in a sperate pod within the namespace where the spinnaker is installed, since the "halyard pod"
-doesnt have permission to install any packages
+* Its better to configure spin in a sperate pod within the same namespace where the spinnaker is installed, since the "halyard pod" doesn't have permission to install any packages
 * Before installing "spin", we need to know the spinnaker's-gate svc endpoint, maker sure we have before-hand
 * Spinning an busybox pod in the spinnaker's namespace
 ```
@@ -99,6 +98,7 @@ done
 ```
 
 
+### Installation 
 
 
 
