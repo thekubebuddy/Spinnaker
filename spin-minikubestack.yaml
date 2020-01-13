@@ -1,11 +1,9 @@
-# ---
-# apiVersion: v1
-# kind: Namespace
-# metadata:
-#   name: operations
-
 ---
-
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: operations
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -18,26 +16,6 @@ subjects:
 - kind: ServiceAccount
   name: default
   namespace: operations
-# ---
-# apiVersion: v1
-# kind: PersistentVolume
-# metadata: 
-#   name: halyard-ebs-pv
-#   namespace: operations
-#   labels:
-#     type: halyardebs
-# spec:
-#   storageClassName: standard
-#   capacity:
-#     storage: 5Gi
-#   persistentVolumeReclaimPolicy: Retain
-#   accessModes:
-#     - ReadWriteOnce
-#   awsElasticBlockStore:
-#     volumeID: vol-0eab7b4686c6b1248
-#     fsType: ext4 
-
-
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -52,7 +30,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
   selector:
     matchLabels:
       type: halyardebs
@@ -84,12 +62,10 @@ spec:
         runAsGroup: 1000
         runAsUser: 1000
         fsGroup: 1000
-      # nodeSelector:
-      #   Environment: Operations
       containers:
       - name: halyard-daemon
         # todo - make :stable or digest of :stable
-        image: gcr.io/spinnaker-marketplace/halyard:stable
+        image: gcr.io/spinnaker-marketplace/halyard:1.28.0-20191119172816
         imagePullPolicy: Always
         command:
         - /bin/sh
@@ -154,7 +130,6 @@ spec:
   selector:
     app: spin
     stack: halyard
-
 ---
 
 apiVersion: v1
@@ -287,13 +262,13 @@ data:
       #     masters: []
       ci:
         jenkins:
-          enabled: true
-          masters:
-          - name: jenkins-master
-            address: http://jenkins.operations.svc.cluster.local:8080
-            username: admin
-            password: 8VPk2oY2iG
-            # baseUrl: http://jenkins.operations:8080
+          enabled: false
+          # masters:
+          # - name: jenkins-master
+          #   address: http://jenkins.operations.svc.cluster.local:8080
+          #   username: admin
+          #   password: 8VPk2oY2iG
+          #   baseUrl: http://jenkins.operations:8080
         travis:
           enabled: false
           masters: []
@@ -386,26 +361,6 @@ data:
         templatesEnabled: true
         showAllConfigsEnabled: true
 ---
-
-# apiVersion: v1
-# kind: PersistentVolume
-# metadata: 
-#   name: minio-ebs-pv
-#   namespace: operations
-#   labels:
-#     type: minioebs
-# spec:
-#   storageClassName: standard
-#   capacity:
-#     storage: 5Gi
-#   persistentVolumeReclaimPolicy: Retain
-#   accessModes:
-#     - ReadWriteOnce
-#   awsElasticBlockStore:
-#     volumeID: vol-00600dbe4b0c4ddd3
-#     fsType: ext4 
-
-# ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -419,7 +374,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
   selector:
     matchLabels:
       type: minioebs  
@@ -464,8 +419,7 @@ spec:
         volumeMounts:
         - name: storage
           mountPath: /storages
-      # nodeSelector:
-      #   Environment: Operations
+
 
 ---
 
@@ -517,12 +471,10 @@ spec:
         stack: hal-deploy
     spec:
       restartPolicy: OnFailure
-      # nodeSelector:
-      #   Environment: Operations
       containers:
       - name: hal-deploy-apply
         # todo use a custom image
-        image: gcr.io/spinnaker-marketplace/halyard:stable
+        image: gcr.io/spinnaker-marketplace/halyard:1.28.0-20191119172816
         command: ["/bin/sh"]
         args: ["-c","hal deploy apply --daemon-endpoint http://spin-halyard.operations:8064"]
 

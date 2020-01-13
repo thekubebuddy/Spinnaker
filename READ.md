@@ -77,6 +77,12 @@ spin pipeline delete <pipline-name> --application <app-name>
 # Saving a spinnaker template as a pipeline
 spin pipeline save --file template1.txt
 
+
+# Spinnaker version upgrade
+hal version list
+version=1.17.5
+hal config version edit --version $version
+hal deploy apply
 ``` 
 3. Some useful-bash-hacks
 ```
