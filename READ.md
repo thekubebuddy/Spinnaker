@@ -32,12 +32,14 @@ TOKEN_FILE=/home/spinnaker/TOKEN
 
 hal config artifact github account add $ARTIFACT_ACCOUNT_NAME --token-file $TOKEN_FILE
 
-# Configuring bitbucket artifact account
-# hal config features edit --artifacts true
-# hal config artifact bitbucket account list
-# ARTIFACT_ACCOUNT_NAME=sample-bitbucket-artifact-account
-# hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username <username> --password
-# hal config artifact bitbucket account list
+```
+**Configuring bitbucket artifact account**
+```
+hal config features edit --artifacts true
+hal config artifact bitbucket account list
+ARTIFACT_ACCOUNT_NAME=sample-bitbucket-artifact-account
+hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username <username> --password
+hal config artifact bitbucket account list
 # Once configured, need to hit the "hal deploy" to take changes on spinnaker end
 hal deploy apply
 ```
