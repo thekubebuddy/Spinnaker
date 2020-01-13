@@ -17,6 +17,7 @@ Table of Content
 1. Configuring github/gitlab/bitbucket as an Artifact account
 
 ```
+
 hal config features edit --artifacts true
 
 # Enabling the github artifact account
@@ -31,14 +32,24 @@ TOKEN_FILE=/home/spinnaker/TOKEN
 
 hal config artifact github account add $ARTIFACT_ACCOUNT_NAME --token-file $TOKEN_FILE
 
-# Configuring through password for bitbucket account
-# hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username <username> --password <password>
-
+# Configuring bitbucket artifact account
+# hal config features edit --artifacts true
+# hal config artifact bitbucket account list
+# ARTIFACT_ACCOUNT_NAME=sample-bitbucket-artifact-account
+# hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username <username> --password
+# hal config artifact bitbucket account list
 # Once configured, need to hit the "hal deploy" to take changes on spinnaker end
 hal deploy apply
+```
+![bitbucket-artifact-example](pics/bitbucket-artifact-account.png)
+
+**cloud_driver, echo, igor service will be restarted**
+```
 # deleting the the artifact account
 hal config artifact github account delete $ARTIFACT_ACCOUNT_NAME 
+
 ```
+
 
 ### Spin CLI
 1. CLI configuration
@@ -75,10 +86,8 @@ spin pipeline get --name <pipline-name> --application <app-name>
 spin pipeline delete <pipline-name> --application <app-name>
 
 # Saving a spinnaker template as a pipeline
-spin pipeline save --file template1.txt
+spin pipeline save --file template1.tx, configure and deploy
 
-
-# Spinnaker version upgrade
 hal version list
 version=1.17.5
 hal config version edit --version $version
@@ -108,21 +117,30 @@ done
 ### Upgrading spinnaker version
 * Exec into the halyard pod
 ```
-
+k exec -it <spin-halyard-podname> bash
 ``` 
+* Check the spinnaker version, select the version to deployed, configure and deploy
+```
+hal version list #checking the current version
+version=1.17.5
+hal config version edit --version $version
+hal deploy apply
+hal version list
+
+```
 
 ### Spinnaker on minikube
 
-#### Step 1. For running spinnaker minikube vm must atleast have 8Gi,4 cores of compute power for deploying Spinnaker smootly, without any trouble.
+**Step 1. For running spinnaker minikube vm must atleast have 8Gi,4 cores of compute power for deploying Spinnaker smootly, without any trouble.**
 ```
 minikube start --vm-driver=virtualbox --kubernetes-version=1.16.0 --memory=8192 --cpus=4 --disk-size=50g
 ```
 
-#### Step 2. Deploy the spinnaker stack once the minikube cluster-up running
+**Step 2. Deploy the minikube spinnaker stack i.e spin-minikube.yaml once the minikube cluster-up running**
 ```
-k create -f spin-minikube.yaml
+kubectl create -f spin-minikube.yaml
 ```
-
+*Deploying spinnaker on minikube is patience keeping process, with the above lease configuration*
 
 
 
