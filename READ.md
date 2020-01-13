@@ -33,7 +33,7 @@ TOKEN_FILE=/home/spinnaker/TOKEN
 hal config artifact github account add $ARTIFACT_ACCOUNT_NAME --token-file $TOKEN_FILE
 
 ```
-**Configuring bitbucket artifact account**
+**Configuring bitbucket as an artifact account**
 ```
 hal config features edit --artifacts true
 hal config artifact bitbucket account list
