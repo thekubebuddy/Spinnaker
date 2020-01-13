@@ -228,7 +228,10 @@ data:
       persistentStorage:
         persistentStoreType: s3
         azs: {}
-        gcs:hal-deploy-apply-l846q
+        gcs:
+          rootFolder: front50
+        redis: {}
+        s3:
           bucket: spinnaker-artifacts
           rootFolder: front50
           endpoint: http://minio-service.operations:9000
@@ -477,4 +480,3 @@ spec:
         image: gcr.io/spinnaker-marketplace/halyard:1.28.0-20191119172816
         command: ["/bin/sh"]
         args: ["-c","hal deploy apply --daemon-endpoint http://spin-halyard.operations:8064"]
-

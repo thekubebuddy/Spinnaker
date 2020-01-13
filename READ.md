@@ -3,8 +3,8 @@ Table of Content
 
 * [Artifact account](#artifact-account)
 * [Spin CLI](#spin-cli)
-
-
+* [Upgrading spinnaker version](#upgrading-spinnaker-version)
+* [Spinnaker on minikube](#spinnaker-on-minikube)
 
 ###  Artifact Account
 
@@ -31,7 +31,7 @@ TOKEN_FILE=/home/spinnaker/TOKEN
 
 hal config artifact github account add $ARTIFACT_ACCOUNT_NAME --token-file $TOKEN_FILE
 
-# configure through password for bitbucket account
+# Configuring through password for bitbucket account
 # hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username <username> --password <password>
 
 # Once configured, need to hit the "hal deploy" to take changes on spinnaker end
@@ -83,6 +83,7 @@ hal version list
 version=1.17.5
 hal config version edit --version $version
 hal deploy apply
+hal version list
 ``` 
 3. Some useful-bash-hacks
 ```
@@ -104,8 +105,23 @@ done
 ```
 
 
-### Installation 
+### Upgrading spinnaker version
+* Exec into the halyard pod
+```
 
+``` 
+
+### Spinnaker on minikube
+
+#### Step 1. For running spinnaker minikube vm must atleast have 8Gi,4 cores of compute power for deploying Spinnaker smootly, without any trouble.
+```
+minikube start --vm-driver=virtualbox --kubernetes-version=1.16.0 --memory=8192 --cpus=4 --disk-size=50g
+```
+
+#### Step 2. Deploy the spinnaker stack once the minikube cluster-up running
+```
+k create -f spin-minikube.yaml
+```
 
 
 
