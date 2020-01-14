@@ -216,7 +216,7 @@ data:
         size: SMALL
         type: Distributed
         location: operations
-        accountName: my-kubernetes-account
+        accountName: minikube-cluster
         updateVersions: true
         consul:
           enabled: false
