@@ -196,7 +196,7 @@ data:
         kubernetes:
           enabled: true
           accounts:
-          - name: my-kubernetes-account
+          - name: minikube-cluster
             requiredGroupMembership: []
             providerVersion: V2
             dockerRegistries: []
@@ -208,7 +208,7 @@ data:
             omitKinds: []
             customResources: []
             oAuthScopes: []
-          primaryAccount: my-kubernetes-account
+          primaryAccount: minikube-cluster
         oraclebmcs:
           enabled: false
           accounts: []
@@ -270,7 +270,7 @@ data:
           # - name: jenkins-master
           #   address: http://jenkins.operations.svc.cluster.local:8080
           #   username: admin
-          #   password: 8VPk2oY2iG
+          #   password: admin
           #   baseUrl: http://jenkins.operations:8080
         travis:
           enabled: false

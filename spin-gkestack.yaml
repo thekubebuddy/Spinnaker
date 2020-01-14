@@ -197,7 +197,7 @@ data:
         kubernetes:
           enabled: true
           accounts:
-          - name: my-kubernetes-account
+          - name: gke-cluster-account
             requiredGroupMembership: []
             providerVersion: V2
             dockerRegistries: []
@@ -209,14 +209,14 @@ data:
             omitKinds: []
             customResources: []
             oAuthScopes: []
-          primaryAccount: my-kubernetes-account
+          primaryAccount: gke-cluster-account
         oraclebmcs:
           enabled: false
           accounts: []
       deploymentEnvironment:
         size: SMALL
         type: Distributed
-        accountName: my-kubernetes-account
+        accountName: gke-cluster-account
         updateVersions: true
         consul:
           enabled: false

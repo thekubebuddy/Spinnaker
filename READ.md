@@ -155,10 +155,10 @@ kubectl create -f spin-minikube.yaml
 *Deploying spinnaker on minikube is patience keeping process, with the above lease configuration*
 
 ### Spinnaker on GKE
-
+**All the spinnaker micro-services are deployed to the spinnaker namespace though it could be changed**
 Step1. Create the "spin-gkestack.yaml" on GKE
 
-Step2. expose the spin-deck and spin-gate(if needed) through spin-svc.yaml
+Step2. Expose the spin-deck and spin-gate(if needed) svc through spin-svc.yaml
 
 
 
