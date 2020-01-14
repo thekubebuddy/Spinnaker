@@ -5,6 +5,7 @@ Table of Content
 * [Spin CLI](#spin-cli)
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
+* [Spinnaker on GKE](#spinnaker-on-gke)
 
 ###  Artifact Account
 
@@ -32,7 +33,7 @@ TOKEN_FILE=/home/spinnaker/TOKEN
 
 hal config artifact github account add $ARTIFACT_ACCOUNT_NAME --token-file $TOKEN_FILE
 
-hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username-password-file $FILE_PATH
+hal config artifact bitbucket account add sample-bitbucket-account --username-password-file $FILE_PATH
 ```
 **Configuring bitbucket as an artifact account**
 ```
@@ -49,7 +50,7 @@ hal config artifact bitbucket account list
 ARTIFACT_ACCOUNT_NAME=sample-bitbucket-account
 USER_NAME=ishaq4466
 # Configuring the bitbucket account and listing
-hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username $USER_NAME --password
+hal config artifact bitbucket account add sample-bitbucket-account --username $USER_NAME --password
 hal config artifact bitbucket account list
 # Once configured, need to hit the "hal deploy" to take changes on spinnaker end
 hal deploy apply
@@ -153,7 +154,11 @@ kubectl create -f spin-minikube.yaml
 ```
 *Deploying spinnaker on minikube is patience keeping process, with the above lease configuration*
 
+### Spinnaker on GKE
 
+Step1. Create the "spin-gkestack.yaml" on GKE
+
+Step2. expose the spin-deck and spin-gate(if needed) through spin-svc.yaml
 
 
 
