@@ -32,26 +32,40 @@ TOKEN_FILE=/home/spinnaker/TOKEN
 
 hal config artifact github account add $ARTIFACT_ACCOUNT_NAME --token-file $TOKEN_FILE
 
+hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username-password-file $FILE_PATH
 ```
 **Configuring bitbucket as an artifact account**
 ```
+# Enabling the artifact feature
 hal config features edit --artifacts true
+
+# Enabling bitbucket artifact account
+hal config artifact bitbucket enable
+
+# Listing the bitbucket artifact accounts 
 hal config artifact bitbucket account list
-ARTIFACT_ACCOUNT_NAME=sample-bitbucket-artifact-account
-hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username <username> --password
+
+# Setting the artifact-account-name and username
+ARTIFACT_ACCOUNT_NAME=sample-bitbucket-account
+USER_NAME=ishaq4466
+# Configuring the bitbucket account and listing
+hal config artifact bitbucket account add $ARTIFACT_ACCOUNT_NAME --username $USER_NAME --password
 hal config artifact bitbucket account list
 # Once configured, need to hit the "hal deploy" to take changes on spinnaker end
 hal deploy apply
 ```
-![bitbucket-artifact-example](pics/bitbucket-artifact-account.png)
+![bitbucket-artifact-example](pics/spin-bitbucket-account.png)
 
-**cloud_driver, echo, igor service will be restarted**
 ```
 # deleting the the artifact account
-hal config artifact github account delete $ARTIFACT_ACCOUNT_NAME 
+hal config artifact bitbucket account delete $ARTIFACT_ACCOUNT_NAME 
+```
+**cloud_driver, echo, igor service will be restarted**
+Api calling for my reference:
 
 ```
-
+curl  --request GET --user ishaq4466:<password> https://api.bitbucket.org/2.0/repositories/ishaq4466/kubernetes/src/master/deployment/sample_deployment.yaml
+```
 
 ### Spin CLI
 1. CLI configuration
@@ -90,11 +104,6 @@ spin pipeline delete <pipline-name> --application <app-name>
 # Saving a spinnaker template as a pipeline
 spin pipeline save --file template1.tx, configure and deploy
 
-hal version list
-version=1.17.5
-hal config version edit --version $version
-hal deploy apply
-hal version list
 ``` 
 3. Some useful-bash-hacks
 ```
@@ -119,7 +128,7 @@ done
 ### Upgrading spinnaker version
 * Exec into the halyard pod
 ```
-k exec -it <spin-halyard-podname> bash
+kubectl exec -it <spin-halyard-podname> bash
 ``` 
 * Check the spinnaker version, select the version to deployed, configure and deploy
 ```
