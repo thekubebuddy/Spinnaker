@@ -47,10 +47,10 @@ hal config artifact bitbucket enable
 hal config artifact bitbucket account list
 
 # Setting the artifact-account-name and username
-ARTIFACT_ACCOUNT_NAME=sample-bitbucket-account
+#ARTIFACT_ACCOUNT_NAME=sample-bitbucket-account
 USER_NAME=ishaq4466
 # Configuring the bitbucket account and listing
-hal config artifact bitbucket account add sample-bitbucket-account --username $USER_NAME --password
+hal config artifact bitbucket account add sample-bit-account --username $USER_NAME --password
 hal config artifact bitbucket account list
 # Once configured, need to hit the "hal deploy" to take changes on spinnaker end
 hal deploy apply
@@ -62,11 +62,17 @@ hal deploy apply
 hal config artifact bitbucket account delete $ARTIFACT_ACCOUNT_NAME 
 ```
 **cloud_driver, echo, igor service will be restarted**
-Api calling for my reference:
 
+**If artifact account configure correctly you will the below image result on the spinnaker console**
+![bitbucket-artifact-example1](pics/bit-account1.png)
+
+![bitbucket-artifact-example2](pics/bit-account2.png)
+
+Api calling for my reference:
 ```
 curl  --request GET --user ishaq4466:<password> https://api.bitbucket.org/2.0/repositories/ishaq4466/kubernetes/src/master/deployment/sample_deployment.yaml
 ```
+*it happens sometime the artifact account doesn't appear, try to upgrade the spinnaker version and re-try to configure the artifact account*
 
 ### Spin CLI
 1. CLI configuration
@@ -156,6 +162,7 @@ kubectl create -f spin-minikube.yaml
 
 ### Spinnaker on GKE
 **All the spinnaker micro-services are deployed to the spinnaker namespace though it could be changed**
+
 Step1. Create the "spin-gkestack.yaml" on GKE
 
 Step2. Expose the spin-deck and spin-gate(if needed) svc through spin-svc.yaml
