@@ -35,7 +35,7 @@ hal config artifact github account add $ARTIFACT_ACCOUNT_NAME --token-file $TOKE
 
 hal config artifact bitbucket account add sample-bitbucket-account --username-password-file $FILE_PATH
 ```
-**Configuring bitbucket as an artifact account**
+#### Configuring bitbucket as an artifact account
 ```
 # Enabling the artifact feature
 hal config features edit --artifacts true
@@ -72,7 +72,7 @@ Api calling for my reference:
 ```
 curl  --request GET --user ishaq4466:<password> https://api.bitbucket.org/2.0/repositories/ishaq4466/kubernetes/src/master/deployment/sample_deployment.yaml
 ```
-*it happens sometime the artifact account doesn't appear, try to upgrade the spinnaker version and re-try to configure the artifact account*
+*\*it happens sometime the artifact account doesn't appear, try to upgrade the spinnaker version and re-try to configure the artifact account*
 
 ### Spin CLI
 1. CLI configuration
