@@ -65,7 +65,7 @@ spec:
       containers:
       - name: halyard-daemon
         # todo - make :stable or digest of :stable
-        image: gcr.io/spinnaker-marketplace/halyard:1.28.0-20191119172816
+        image: gcr.io/spinnaker-marketplace/halyard:1.28.0
         imagePullPolicy: Always
         command:
         - /bin/sh
@@ -131,7 +131,6 @@ spec:
     app: spin
     stack: halyard
 ---
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -265,13 +264,13 @@ data:
       #     masters: []
       ci:
         jenkins:
-          enabled: false
-          # masters:
-          # - name: jenkins-master
-          #   address: http://jenkins.operations.svc.cluster.local:8080
-          #   username: admin
-          #   password: admin
-          #   baseUrl: http://jenkins.operations:8080
+          enabled: true
+          # for enabling jenkins in as CI tool in spinnaker
+          masters:
+          - name: jenkins-master
+            address: http://jenkins.operations.svc.cluster.local:8080
+            username: admin
+            password: admin
         travis:
           enabled: false
           masters: []
@@ -411,7 +410,7 @@ spec:
         image: minio/minio
         args:
         - server
-        - /storage
+        - /storages
         env:
         - name: MINIO_ACCESS_KEY
           value: "dont-use-this"
@@ -477,6 +476,6 @@ spec:
       containers:
       - name: hal-deploy-apply
         # todo use a custom image
-        image: gcr.io/spinnaker-marketplace/halyard:1.28.0-20191119172816
+        image: gcr.io/spinnaker-marketplace/halyard:1.28.0
         command: ["/bin/sh"]
         args: ["-c","hal deploy apply --daemon-endpoint http://spin-halyard.operations:8064"]

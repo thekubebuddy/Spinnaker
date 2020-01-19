@@ -69,7 +69,7 @@ hal config artifact bitbucket account delete $ARTIFACT_ACCOUNT_NAME
 
 ![bitbucket-artifact-example2](pics/bit-account2.png)
 
-Api calling for my reference:
+Api call for my reference:
 ```
 curl  --request GET --user ishaq4466:<password> https://api.bitbucket.org/2.0/repositories/ishaq4466/kubernetes/src/master/deployment/sample_deployment.yaml
 ```
@@ -159,15 +159,17 @@ minikube start --vm-driver=virtualbox --kubernetes-version=1.16.0 --memory=8192 
 ```
 kubectl create -f spin-minikube.yaml
 ```
-*Deploying spinnaker on minikube is patience keeping process, with the above lease configuration*
+
+![spinnaker-resources-util](pics/spin-on-minkube.png)
+***Deploying spinnaker on minikube is patience keeping process, with the above least configuration***
 
 ### Spinnaker on GKE
-**All the spinnaker micro-services are deployed to the spinnaker namespace though it could be changed**
 
 Step1. Create the "spin-gkestack.yaml" on GKE
 
-Step2. Expose the spin-deck and spin-gate(if needed) svc through spin-svc.yaml
+Step2. Expose the spin-deck and spin-gate(if needed) as NodePort or LoadBalancer svc through "spin-svc.yaml"
 
+**Note: All the spinnaker micro-services are deployed to the spinnaker namespace though it could be changed**
 
 
 

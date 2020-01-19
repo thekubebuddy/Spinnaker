@@ -3,12 +3,12 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: jenkins
-  namespace: spinnaker 
+  namespace: operations 
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: spinnaker
+  namespace: operations
   name: jenkins-master-role
 rules:
 - apiGroups: [""]
@@ -19,11 +19,11 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: jenkins-rolebinding
-  namespace: spinnaker
+  namespace: operations
 subjects:
 - kind: ServiceAccount
   name: jenkins
-  namespace: spinnaker
+  namespace: operations
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -34,7 +34,7 @@ roleRef:
 # kind: PersistentVolume
 # metadata: 
 #   name: jenkins-ebs-pv
-#   namespace: spinnaker
+#   namespace: operations
 #   labels:
 #     type: amazonEBS
 # spec:
@@ -53,27 +53,31 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: jenkins-ebs-pvc
-  namespace: spinnaker
+  namespace: operations
 spec:
   storageClassName: standard
   resources:
     requests:
-      storage: 10Gi
+      storage: 1Gi
   accessModes:
     - ReadWriteOnce
   # selector:
   #   matchLabels:
   #     type: amazonEBS  
 ---
-apiVersion: extensions/v1beta1
+# apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jenkins
-  namespace: spinnaker
+  namespace: operations
   labels:
     app: jenkins
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
   template:
     metadata:
       labels:
@@ -114,7 +118,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: jenkins
-  namespace: spinnaker
+  namespace: operations
 spec:
   type: NodePort
   ports:
@@ -128,7 +132,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: jenkins-agent
-  namespace: spinnaker
+  namespace: operations
 spec:
   ports:
     - port: 50000

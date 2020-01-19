@@ -264,13 +264,6 @@ data:
         jenkins:
           enabled: false
           masters: []
-        # jenkins:
-        #   enabled: true
-        #   masters:
-        #   - name: jenkins-master
-        #     address: http://jenkins.spinnaker.svc.cluster.local:8080
-        #     username: admin
-        #     password: admin 
         travis:
           enabled: false
           masters: []
@@ -330,11 +323,6 @@ data:
         - name: prometheus
           enabled: false
           accounts: [] 
-          # - name: my-prometheus
-          #   endpoint:
-          #     baseUrl: http://prometheus-server.spinnaker.svc.cluster.local:80
-          #   supportedTypes:
-          #   - METRICS_STORE
         - name: datadog
           enabled: false
           accounts: []
