@@ -77,7 +77,7 @@ spec:
               containerPort: 50000
           volumeMounts:
             - name: jenkins-vol
-              mountPath: /var/jenkins_home
+              mountPath: /var/lib/jenkins
       initContainers:  
         - name: increase-fd-ulimit
           image: busybox

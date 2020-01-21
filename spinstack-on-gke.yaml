@@ -150,7 +150,7 @@ data:
     currentDeployment: default
     deploymentConfigurations:
     - name: default
-      version: 1.12.2
+      version: 1.17.6
       providers:
         appengine:
           enabled: false
@@ -297,11 +297,11 @@ data:
           enabled: false
           accounts: []
         github:
-          enabled: true
-          accounts:
-          - name: sample-github-account
-            username: {{github-username}}
-            password: {{github-password}}
+          enabled: fasle
+          accounts: []
+          # - name: sample-github-account
+          #   username: {{github-username}}
+          #   password: {{github-password}}
         http:
           enabled: false
           accounts: []
