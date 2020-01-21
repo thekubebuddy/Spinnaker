@@ -38,7 +38,7 @@ roleRef:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jenkins-ebs-pvc
+  name: jenkins-pvc
   namespace: spinnaker
 spec:
   storageClassName: standard
@@ -77,7 +77,7 @@ spec:
               containerPort: 50000
           volumeMounts:
             - name: jenkins-vol
-              mountPath: /var/lib/jenkins
+              mountPath: /var/jenkins_home
       initContainers:  
         - name: increase-fd-ulimit
           image: busybox
