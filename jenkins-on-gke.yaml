@@ -87,7 +87,7 @@ spec:
       volumes:
         - name: jenkins-vol
           persistentVolumeClaim:
-            claimName: jenkins-ebs-pvc
+            claimName: jenkins-pvc
 ---
 # Service for accessing jenkins-UI
 apiVersion: v1
