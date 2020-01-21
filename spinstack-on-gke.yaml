@@ -1,11 +1,4 @@
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: spinnaker
-
----
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -72,8 +65,6 @@ spec:
         - /bin/sh
         args:
         - -c
-        # We persist the files on a PersistentVolume. To have sane defaults,
-        # we initialise those files from a ConfigMap if they don't already exist.
         - "cp -R /home/spinnaker/staging/.hal/. /home/spinnaker/.hal/ && /opt/halyard/bin/halyard"
         readinessProbe:
           exec:
@@ -225,7 +216,6 @@ data:
         customSizing: {}
         gitConfig:
           upstreamUser: spinnaker
-        # namespace: <your-choice-namespace>
       persistentStorage:
         persistentStoreType: s3
         azs: {}
@@ -264,13 +254,13 @@ data:
         jenkins:
           enabled: false
           masters: []
-        # jenkins:
-        #   enabled: true
-        #   masters:
-        #   - name: jenkins-master
-        #     address: http://jenkins.spinnaker.svc.cluster.local:8080
-        #     username: admin
-        #     password: admin 
+        jenkins:
+          enabled: true
+          masters:
+          - name: jenkins-master
+            address: http://jenkins.spinnaker.svc.cluster.local:8080
+            username: <jenkins-username>
+            password: <jenkins-username-password>
         travis:
           enabled: false
           masters: []
@@ -329,12 +319,6 @@ data:
           stackdriverEnabled: false
         - name: prometheus
           enabled: false
-          accounts: [] 
-          # - name: my-prometheus
-          #   endpoint:
-          #     baseUrl: http://prometheus-server.spinnaker.svc.cluster.local:80
-          #   supportedTypes:
-          #   - METRICS_STORE
         - name: datadog
           enabled: false
           accounts: []
@@ -458,3 +442,22 @@ spec:
         args:
         - -c
         - "hal deploy apply --daemon-endpoint http://spin-halyard.spinnaker:8064"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: spinnaker
+  labels:
+    app: spin
+    stack: deck
+  name: spin-deck-lb
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 9000
+    protocol: TCP
+  selector:
+    cluster: spin-deck
