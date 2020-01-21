@@ -252,15 +252,12 @@ data:
       timezone: America/Los_Angeles
       ci:
         jenkins:
-          enabled: false
-          masters: []
-        jenkins:
           enabled: true
           masters:
           - name: jenkins-master
             address: http://jenkins.spinnaker.svc.cluster.local:8080
-            username: <jenkins-username>
-            password: <jenkins-username-password>
+            username: {{jenkins-username}}
+            password: {{jenkins-password}}
         travis:
           enabled: false
           masters: []
@@ -300,8 +297,11 @@ data:
           enabled: false
           accounts: []
         github:
-          enabled: false
-          accounts: []
+          enabled: true
+          accounts:
+          - name: sample-github-account
+            username: {{github-username}}
+            password: {{github-password}}
         http:
           enabled: false
           accounts: []
