@@ -297,11 +297,23 @@ data:
           enabled: false
           accounts: []
         github:
-          enabled: fasle
+          enabled: false
           accounts: []
           # - name: sample-github-account
           #   username: {{github-username}}
           #   password: {{github-password}}
+        gitlab:
+          enabled: false
+          accounts: []
+          # - name: sample-gitlab-account
+          #   username: {{gitlab-username}}
+          #   password: {{gitlab-password}}
+        bitbucket:
+          enabled: false
+          accounts: []
+          # - name: sample-bitbucket-account
+          #   username: {{bitbucket-username}}
+          #   password: {{bitbucket-password}}
         http:
           enabled: false
           accounts: []
