@@ -256,8 +256,8 @@ data:
           masters:
           - name: jenkins-master
             address: http://jenkins.spinnaker.svc.cluster.local:8080
-            username: admin
-            password: admin
+            username: {{jenkins-username}}
+            password: {{jenkins-password}}
         travis:
           enabled: false
           masters: []
