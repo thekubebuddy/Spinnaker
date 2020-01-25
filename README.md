@@ -7,7 +7,7 @@ Table of Content
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
 * [Spinnaker on GKE](#spinnaker-on-gke)
-* [Jenkins crumb issue](#jenkins-crum-issue)
+* [Jenkins crumb issue](#jenkins-crumb-issue)
 
 ###  Artifact Account
 
