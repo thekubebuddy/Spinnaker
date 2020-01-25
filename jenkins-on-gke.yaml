@@ -64,7 +64,8 @@ spec:
       serviceAccountName: jenkins
       containers:
         - name: jenkin-master
-          image: jenkins/jenkins
+          # image: jenkins/jenkins 
+          image: jenkinsci/blueocean
           ports:
             - name: http-port
               containerPort: 8080
@@ -72,7 +73,7 @@ spec:
               containerPort: 50000
           volumeMounts:
             - name: jenkins-vol
-              mountPath: /var/jenkins_home
+              mountPath: /var/lib/jenkins_home
       initContainers:  
         - name: increase-fd-ulimit
           image: busybox
