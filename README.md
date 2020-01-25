@@ -7,6 +7,7 @@ Table of Content
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
 * [Spinnaker on GKE](#spinnaker-on-gke)
+* [Jenkins crumb issue](#jenkins-crum-issue)
 
 ###  Artifact Account
 
@@ -166,16 +167,16 @@ kubectl create -f spin-minikube.yaml
 
 Step1. Cluster creation
 ```
-gcloud config set compute/zone us-east1-d
+
 gcloud container clusters create jen-spin-cicd   --machine-type n1-standard-2 --num-nodes 2 --project <project-id>
 ```
 Step1. Create the "spin-gkestack.yaml" on GKE
 
 Step2. Expose the spin-deck and spin-gate(if needed) svc through spin-svc.yaml
 
+### [Jenkins Crumb issue](https://github.com/spinnaker/spinnaker/issues/2067#issuecomment-454752402)
 
-
-
+![CRUMB ISSUE](pics/crumb-issue.png)
 
 
 
