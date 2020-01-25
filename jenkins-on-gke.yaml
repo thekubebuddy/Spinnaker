@@ -64,10 +64,7 @@ spec:
       serviceAccountName: jenkins
       containers:
         - name: jenkin-master
-          # image: jenkins/jenkins 
-          # image: jenkinsci/blueocean
-          # jenkins 2.176.3  2.204.1
-          image: jenkins:2.204.1
+          image: jenkins/jenkins:2.204.1
           ports:
             - name: http-port
               containerPort: 8080
@@ -117,3 +114,7 @@ spec:
 ---
 
 
+# Jenkins images  can be used
+# image: jenkins/jenkins 
+# image: jenkinsci/blueocean
+# image: jenkins/jenkins:2.176.3/2.204.1

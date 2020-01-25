@@ -164,6 +164,11 @@ kubectl create -f spin-minikube.yaml
 ### Spinnaker on GKE
 **All the spinnaker micro-services are deployed to the spinnaker namespace though it could be changed**
 
+Step1. Cluster creation
+```
+gcloud config set compute/zone us-east1-d
+gcloud container clusters create jen-spin-cicd   --machine-type n1-standard-2 --num-nodes 2 --project <project-id>
+```
 Step1. Create the "spin-gkestack.yaml" on GKE
 
 Step2. Expose the spin-deck and spin-gate(if needed) svc through spin-svc.yaml
