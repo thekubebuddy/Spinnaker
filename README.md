@@ -3,6 +3,7 @@ Table of Content
 
 * [Artifact account](#artifact-account)
 	* [Configuring bitbucket as an artifact account](#configuring-bitbucket-as-an-artifact-account)
+	* [Configuring docker registry]
 * [Spin CLI](#spin-cli)
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
@@ -75,6 +76,19 @@ Api calling for my reference:
 curl  --request GET --user ishaq4466:<password> https://api.bitbucket.org/2.0/repositories/ishaq4466/kubernetes/src/master/deployment/sample_deployment.yaml
 ```
 *\*it happens sometime the artifact account doesn't appear, try to upgrade the spinnaker version and re-try to configure the artifact account*
+
+#### Configuring docker registry
+```
+# Enable the docker registry provider
+hal config provider docker-registry enable
+ADDRESS=index.docker.io
+USERNAME= <dockerhub-username>
+hal config provider docker-registry account add sample-docker-registry  --address $ADDRESS --username $USERNAME --password 
+hal deploy apply
+hal config provider docker-registry account list
+```
+
+
 
 ### Spin CLI
 1. CLI configuration
