@@ -157,7 +157,7 @@ data:
     currentDeployment: default
     deploymentConfigurations:
     - name: default
-      version: 1.12.2
+      version: 1.17.5
       providers:
         appengine:
           enabled: false
@@ -258,19 +258,19 @@ data:
         slack:
           enabled: false
       timezone: America/Los_Angeles
-      # ci:
-      #   jenkins:
-      #     enabled: false
-      #     masters: []
       ci:
         jenkins:
-          enabled: true
-          # for enabling jenkins in as CI tool in spinnaker
-          masters:
-          - name: jenkins-master
-            address: http://jenkins.operations.svc.cluster.local:8080
-            username: admin
-            password: admin
+          enabled: false
+          masters: []
+      # ci:
+      #   jenkins:
+      #     enabled: true
+      #     # for enabling jenkins in as CI tool in spinnaker
+      #     masters:
+      #     - name: jenkins-master
+      #       address: http://jenkins.operations.svc.cluster.local:8080
+      #       username: admin
+      #       password: admin
         travis:
           enabled: false
           masters: []
