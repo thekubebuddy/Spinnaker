@@ -3,7 +3,7 @@ Table of Content
 
 * [Artifact account](#artifact-account)
 	* [Configuring bitbucket as an artifact account](#configuring-bitbucket-as-an-artifact-account)
-	* [Configuring docker registry]
+	* [Configuring docker registry](#configuring-docker-registry)
 * [Spin CLI](#spin-cli)
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
