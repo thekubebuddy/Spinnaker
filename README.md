@@ -3,12 +3,11 @@ Table of Content
 
 * [Artifact account](#artifact-account)
 	* [Configuring bitbucket as an artifact account](#configuring-bitbucket-as-an-artifact-account)
-	* [Configuring docker registry](#configuring-docker-registry)
 * [Spin CLI](#spin-cli)
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
 * [Spinnaker on GKE](#spinnaker-on-gke)
-* [Jenkins crumb issue](#jenkins-crumb-issue)
+* [Enabling email notification in Spinnaker](#enabling-email-notification-for-spinnaker)
 
 ###  Artifact Account
 
@@ -71,24 +70,11 @@ hal config artifact bitbucket account delete $ARTIFACT_ACCOUNT_NAME
 
 ![bitbucket-artifact-example2](pics/bit-account2.png)
 
-Api calling for my reference:
+Api call for my reference:
 ```
 curl  --request GET --user ishaq4466:<password> https://api.bitbucket.org/2.0/repositories/ishaq4466/kubernetes/src/master/deployment/sample_deployment.yaml
 ```
 *\*it happens sometime the artifact account doesn't appear, try to upgrade the spinnaker version and re-try to configure the artifact account*
-
-#### Configuring docker registry
-```
-# Enable the docker registry provider
-hal config provider docker-registry enable
-ADDRESS=index.docker.io
-USERNAME= <dockerhub-username>
-hal config provider docker-registry account add sample-docker-registry  --address $ADDRESS --username $USERNAME --password 
-hal deploy apply
-hal config provider docker-registry account list
-```
-
-
 
 ### Spin CLI
 1. CLI configuration
@@ -174,31 +160,61 @@ minikube start --vm-driver=virtualbox --kubernetes-version=1.16.0 --memory=8192 
 ```
 kubectl create -f spin-minikube.yaml
 ```
-*Deploying spinnaker on minikube is patience keeping process, with the above lease configuration*
+
+![spinnaker-resources-util](pics/spin-on-minkube.png)
+***Deploying spinnaker on minikube is patience keeping process, with the above least configuration***
 
 ### Spinnaker on GKE
-**All the spinnaker micro-services are deployed to the spinnaker namespace though it could be changed**
 
-Step1. Cluster creation
-```
-
-gcloud container clusters create jen-spin-cicd   --machine-type n1-standard-2 --num-nodes 2 --project <project-id>
-```
 Step1. Create the "spin-gkestack.yaml" on GKE
 
-Step2. Expose the spin-deck and spin-gate(if needed) svc through spin-svc.yaml
+Step2. Expose the spin-deck and spin-gate(if needed) as NodePort or LoadBalancer svc through "spin-svc.yaml"
 
-### [Jenkins Crumb issue](https://github.com/spinnaker/spinnaker/issues/2067#issuecomment-454752402)
-
-![CRUMB ISSUE](pics/crumb-issue.png)
+**Note: All the spinnaker micro-services are deployed to the spinnaker namespace though it could be changed**
 
 
+### Omiting a kubernetes namespaces:
+```
+hal config provider kubernetes account edit ACCOUNT --add-omit-namespace default
+```
 
+### Enabling email notification for Spinnaker
+Save the below configuration file in halyard pod.
+```
+cat>>EOF<<-/home/spinnaker/.hal/default/profiles/settings-local.js 
+window.spinnakerSettings = window.spinnakerSettings || {};
+window.spinnakerSettings.notifications = window.spinnakerSettings.notifications || {};
+window.spinnakerSettings.notifications.email = window.spinnakerSettings.notifications.email || {};
+window.spinnakerSettings.notifications.email.enabled = true;
+EOF
+```
 
-
-
-
-
+```
+cat>>EOF<<-/home/spinnaker/.hal/default/profiles/echo-local.yml
+mail:
+   enabled: true
+   host: smtp.gmail.com
+   from: octacat@google.com
+   properties:
+     mail:
+       smtp:
+         auth: true
+         starttls:
+           enable: true
+spring:
+   mail:
+     host: smtp.gmail.com
+     port: 587
+     username: octacat@google.com
+     password: Octa@123
+     properties:
+       mail:
+         smtp:
+           auth: true
+           starttls:
+             enable: true
+EOF
+```
 
 
 

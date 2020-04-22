@@ -1,0 +1,11 @@
+swagger: "2.0"
+info: 
+  title: Spinnaker for GCP - searce-playground
+  version: 1.0.0
+host: spinnaker3.endpoints.searce-playground.cloud.goog
+x-google-endpoints:
+  - name: spinnaker3.endpoints.searce-playground.cloud.goog
+    target: 34.107.255.115
+x-google-allow: all
+basePath: /
+paths: {}

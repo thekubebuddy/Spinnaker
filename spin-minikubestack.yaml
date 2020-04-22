@@ -1,3 +1,8 @@
+# ---
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: operations
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -10,32 +15,28 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: spinnaker
-
+  namespace: operations
 ---
-
-apiVersion: v1
 kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
   name: halyard-pv-claim
-  namespace: spinnaker
+  namespace: operations
   labels:
     app: halyard-storage-claim
 spec:
+  storageClassName: standard
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
-  storageClassName: standard
-
+      storage: 1Gi
 ---
-
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: spin-halyard
-  namespace: spinnaker
+  namespace: operations
   labels:
     app: spin
     stack: halyard
@@ -60,12 +61,15 @@ spec:
       containers:
       - name: halyard-daemon
         # todo - make :stable or digest of :stable
-        image: gcr.io/spinnaker-marketplace/halyard:1.33.0
+        image: gcr.io/spinnaker-marketplace/halyard:1.28.0
         imagePullPolicy: Always
         command:
         - /bin/sh
         args:
         - -c
+        # We persist the files on a PersistentVolume. To have sane defaults,
+        # we initialise those files from a ConfigMap if they don't already exist.
+        # - "test -f /home/spinnaker/.hal/config || cp -R /home/spinnaker/staging/.hal/. /home/spinnaker/.hal/ && /opt/halyard/bin/halyard"
         - "cp -R /home/spinnaker/staging/.hal/. /home/spinnaker/.hal/ && /opt/halyard/bin/halyard"
         readinessProbe:
           exec:
@@ -113,7 +117,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: spin-halyard
-  namespace: spinnaker
+  namespace: operations
 spec:
   ports:
     - port: 8064
@@ -122,21 +126,19 @@ spec:
   selector:
     app: spin
     stack: halyard
-
 ---
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: halconfig
-  namespace: spinnaker
+  namespace: operations
 data:
   igor.yml: |
     enabled: true
     skipLifeCycleManagement: false
   fiat.yml: |
-    enabled: true
-    skipLifeCycleManagement: false
+    enabled: false
+    skipLifeCycleManagement: true
   front50-local.yml: |
     spinnaker.s3.versioning: false
   gate.yml: |
@@ -144,14 +146,14 @@ data:
   deck.yml: |
     host: 0.0.0.0
     env:
-      API_HOST: http://spin-gate.spinnaker:8084
+      API_HOST: http://spin-gate.operations:8084
   redis.yml: |
     overrideBaseUrl: redis://spin-redis:6379
   config: |
     currentDeployment: default
     deploymentConfigurations:
     - name: default
-      version: 1.19.5
+      version: 1.17.5
       providers:
         appengine:
           enabled: false
@@ -189,29 +191,33 @@ data:
         kubernetes:
           enabled: true
           accounts:
-          - name: gke-cluster-account
+          - name: minikube-cluster
             requiredGroupMembership: []
             providerVersion: V2
             dockerRegistries: []
             configureImagePullSecrets: true
             serviceAccount: true
             namespaces: []
-            omitNamespaces: 
+            omitNamespaces:
             - kube-node-lease
             - kube-public
             - kube-system
+            - kubernetes-dashboard
+            - operations
+            - prometheus
             kinds: []
             omitKinds: []
             customResources: []
             oAuthScopes: []
-          primaryAccount: gke-cluster-account
+          primaryAccount: minikube-cluster
         oraclebmcs:
           enabled: false
           accounts: []
       deploymentEnvironment:
         size: SMALL
         type: Distributed
-        accountName: gke-cluster-account
+        location: operations
+        accountName: minikube-cluster
         updateVersions: true
         consul:
           enabled: false
@@ -229,13 +235,13 @@ data:
         s3:
           bucket: spinnaker-artifacts
           rootFolder: front50
-          endpoint: http://minio-service.spinnaker:9000
+          endpoint: http://minio-service.operations:9000
           accessKeyId: dont-use-this
           secretAccessKey: for-production
         oraclebmcs: {}
       features:
-        auth: true
-        fiat: true
+        auth: false
+        fiat: false
         chaos: false
         entityTags: false
         jobs: false
@@ -257,11 +263,16 @@ data:
       ci:
         jenkins:
           enabled: false
-          masters:
-          - name: jenkins-master
-            # address: http://jenkins.spinnaker.svc.cluster.local:8080
-            # username: {{jenkins-username}}
-            # password: {{jenkins-password}}
+          masters: []
+      # ci:
+      #   jenkins:
+      #     enabled: true
+      #     # for enabling jenkins in as CI tool in spinnaker
+      #     masters:
+      #     - name: jenkins-master
+      #       address: http://jenkins.operations.svc.cluster.local:8080
+      #       username: admin
+      #       password: admin
         travis:
           enabled: false
           masters: []
@@ -303,21 +314,6 @@ data:
         github:
           enabled: false
           accounts: []
-          # - name: sample-github-account
-          #   username: {{github-username}}
-          #   password: {{github-password}}
-        gitlab:
-          enabled: false
-          accounts: []
-          # - name: sample-gitlab-account
-          #   username: {{gitlab-username}}
-          #   password: {{gitlab-password}}
-        bitbucket:
-          enabled: false
-          accounts: []
-          # - name: sample-bitbucket-account
-          #   username: {{bitbucket-username}}
-          #   password: {{bitbucket-password}}
         http:
           enabled: false
           accounts: []
@@ -335,6 +331,12 @@ data:
           stackdriverEnabled: false
         - name: prometheus
           enabled: false
+          # accounts: 
+          # - name: toki-prometheus
+          #   endpoint:
+          #     baseUrl: http://prometheus.operations.svc.cluster.local:9090
+          #   supportedTypes:
+          #   - METRICS_STORE
         - name: datadog
           enabled: false
           accounts: []
@@ -350,7 +352,7 @@ data:
           - name: kayenta-minio
             bucket: spinnaker-artifacts
             rootFolder: kayenta
-            endpoint: http://minio-service.spinnaker:9000
+            endpoint: http://minio-service.operations:9000
             accessKeyId: dont-use-this
             secretAccessKey: for-production
             supportedTypes:
@@ -363,33 +365,36 @@ data:
         templatesEnabled: true
         showAllConfigsEnabled: true
 ---
-
-apiVersion: v1
 kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
   name: minio-pv-claim
-  namespace: spinnaker
+  namespace: operations
   labels:
     app: minio-storage-claim
 spec:
+  storageClassName: standard
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
-  storageClassName: standard
-
+      storage: 1Gi
 ---
 
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   # This name uniquely identifies the Deployment
   name: minio-deployment
-  namespace: spinnaker
+  namespace: operations
+  labels:
+    app: minio
 spec:
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: minio
   template:
     metadata:
       labels:
@@ -404,7 +409,7 @@ spec:
         image: minio/minio
         args:
         - server
-        - /storage
+        - /storages
         env:
         - name: MINIO_ACCESS_KEY
           value: "dont-use-this"
@@ -414,7 +419,8 @@ spec:
         - containerPort: 9000
         volumeMounts:
         - name: storage
-          mountPath: /storage
+          mountPath: /storages
+
 
 ---
 
@@ -422,7 +428,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: minio-service
-  namespace: spinnaker
+  namespace: operations
 spec:
   ports:
     - port: 9000
@@ -432,12 +438,29 @@ spec:
     app: minio
 
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: operations
+  labels:
+    app: spin
+    stack: deck
+  name: spin-deck-np
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 9000
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: deck
 
+--- 
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: hal-deploy-apply
-  namespace: spinnaker
+  namespace: operations
   labels:
     app: job
     stack: hal-deploy
@@ -452,26 +475,6 @@ spec:
       containers:
       - name: hal-deploy-apply
         # todo use a custom image
-        image: gcr.io/spinnaker-marketplace/halyard:1.33.0
-        command:
-        - /bin/sh
-        args:
-        - -c
-        - "hal deploy apply --daemon-endpoint http://spin-halyard.spinnaker:8064"
----
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: spinnaker
-  labels:
-    app: spin
-    stack: deck
-  name: spin-deck-lb
-spec:
-  type: LoadBalancer
-  ports:
-  - name: http
-    port: 9000
-    protocol: TCP
-  selector:
-    cluster: spin-deck
+        image: gcr.io/spinnaker-marketplace/halyard:1.28.0 #1.33.0
+        command: ["/bin/sh"]
+        args: ["-c","hal deploy apply --daemon-endpoint http://spin-halyard.operations:8064"]

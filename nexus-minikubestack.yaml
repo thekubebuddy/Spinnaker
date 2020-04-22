@@ -1,0 +1,63 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nexus-pvc-claim
+  namespace: operations
+  labels:
+    app: halyard-storage-claim
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus
+  namespace: operations
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      name: nexus
+  template:
+    metadata:
+      labels:
+        name: nexus
+    spec:
+      securityContext:
+          fsGroup: 200
+      containers:
+        - name: nexus
+          imagePullPolicy: IfNotPresent
+          image: sonatype/nexus3:latest
+          volumeMounts:
+          - name: naxus-pvc-storage
+            mountPath: /nexus-data
+      volumes:
+      - name: naxus-pvc-storage
+        persistentVolumeClaim:
+          claimName: nexus-pvc-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus
+  namespace: operations
+spec:
+  ports:
+    - name: ui
+      port: 8081
+      targetPort: 8081
+    - name: port9001
+      port: 9001
+      targetPort: 9001
+  selector:
+    name: nexus
+
+
