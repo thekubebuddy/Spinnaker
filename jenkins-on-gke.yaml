@@ -1,34 +1,34 @@
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: spinnaker
+# ---
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: spinnaker
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: jenkins
-  namespace: spinnaker 
+  namespace: cicd 
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: spinnaker
+  namespace: cicd
   name: jenkins-master-role
 rules:
 - apiGroups: [""]
-  resources: ["pods", "pods/exec", "pods/log", "persistentvolumeclaims"]
+  resources: ["pods","events", "pods/exec","pods/watch", "pods/log", "persistentvolumeclaims"]
   verbs: ["*"]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: jenkins-rolebinding
-  namespace: spinnaker
+  namespace: cicd
 subjects:
 - kind: ServiceAccount
   name: jenkins
-  namespace: spinnaker
+  namespace: cicd
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -39,7 +39,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: jenkins-pvc
-  namespace: spinnaker
+  namespace: cicd
 spec:
   storageClassName: standard
   resources:
@@ -48,12 +48,11 @@ spec:
   accessModes:
     - ReadWriteOnce 
 ---
-# apiVersion: extensions/v1beta1
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jenkins
-  namespace: spinnaker
+  namespace: cicd
   labels:
     app: jenkins
 spec:
@@ -67,9 +66,14 @@ spec:
         app: jenkins
     spec:
       serviceAccountName: jenkins
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        fsGroup: 412
       containers:
         - name: jenkin-master
-          image: jenkinsci/blueocean
+          # image: jenkins/jenkins:2.204.1
+          image: smartbuddy/jenkins_tf:1.0
           ports:
             - name: http-port
               containerPort: 8080
@@ -77,7 +81,10 @@ spec:
               containerPort: 50000
           volumeMounts:
             - name: jenkins-vol
-              mountPath: /var/lib/jenkins
+              mountPath: /var/jenkins_home/
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+          imagePullPolicy: Always
       initContainers:  
         - name: increase-fd-ulimit
           image: busybox
@@ -88,15 +95,19 @@ spec:
         - name: jenkins-vol
           persistentVolumeClaim:
             claimName: jenkins-pvc
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+
 ---
 # Service for accessing jenkins-UI
 apiVersion: v1
 kind: Service
 metadata:
   name: jenkins
-  namespace: spinnaker
+  namespace: cicd
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - port: 8080
       targetPort: 8080
@@ -108,7 +119,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: jenkins-agent
-  namespace: spinnaker
+  namespace: cicd
 spec:
   ports:
     - port: 50000
@@ -116,6 +127,5 @@ spec:
       name: slavelistener
   selector:
     app: jenkins
----
 
 

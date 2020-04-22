@@ -178,7 +178,7 @@ Step2. Expose the spin-deck and spin-gate(if needed) as NodePort or LoadBalancer
 hal config provider kubernetes account edit ACCOUNT --add-omit-namespace default
 ```
 
-# Enabling email notification for Spinnaker
+### Enabling email notification for Spinnaker
 Run the below configuration in halyard pod
 ```
 cat>>EOF<<-/home/spinnaker/.hal/default/profiles/settings-local.js 
