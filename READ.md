@@ -7,6 +7,7 @@ Table of Content
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
 * [Spinnaker on GKE](#spinnaker-on-gke)
+* [Enabling email notification in Spinnaker]
 
 ###  Artifact Account
 
@@ -172,15 +173,48 @@ Step2. Expose the spin-deck and spin-gate(if needed) as NodePort or LoadBalancer
 **Note: All the spinnaker micro-services are deployed to the spinnaker namespace though it could be changed**
 
 
+### Omiting a kubernetes namespaces:
+```
+hal config provider kubernetes account edit ACCOUNT --add-omit-namespace default
+```
 
+# Enabling email notification for Spinnaker
+Run the below configuration in halyard pod
+```
+cat>>EOF<<-/home/spinnaker/.hal/default/profiles/settings-local.js 
+window.spinnakerSettings = window.spinnakerSettings || {};
+window.spinnakerSettings.notifications = window.spinnakerSettings.notifications || {};
+window.spinnakerSettings.notifications.email = window.spinnakerSettings.notifications.email || {};
+window.spinnakerSettings.notifications.email.enabled = true;
+EOF
+```
 
-
-
-
-
-
-
-
+```
+cat>>EOF<<-/home/spinnaker/.hal/default/profiles/echo-local.yml
+mail:
+   enabled: true
+   host: smtp.gmail.com
+   from: octacat@google.com
+   properties:
+     mail:
+       smtp:
+         auth: true
+         starttls:
+           enable: true
+spring:
+   mail:
+     host: smtp.gmail.com
+     port: 587
+     username: octacat@google.com
+     password: Octa@123
+     properties:
+       mail:
+         smtp:
+           auth: true
+           starttls:
+             enable: true
+EOF
+```
 
 
 
