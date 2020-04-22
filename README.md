@@ -8,6 +8,8 @@ Table of Content
 * [Spinnaker on minikube](#spinnaker-on-minikube)
 * [Spinnaker on GKE](#spinnaker-on-gke)
 * [Enabling email notification in Spinnaker](#enabling-email-notification-for-spinnaker)
+* [Jenkins crumb issue](#jenkins-crumb-issue)
+
 
 ###  Artifact Account
 
@@ -179,7 +181,7 @@ hal config provider kubernetes account edit ACCOUNT --add-omit-namespace default
 ```
 
 ### Enabling email notification for Spinnaker
-Save the below configuration file in halyard pod.
+Save the below configuration file in halyard pod followed by **hal deploy apply**
 ```
 cat>>EOF<<-/home/spinnaker/.hal/default/profiles/settings-local.js 
 window.spinnakerSettings = window.spinnakerSettings || {};
@@ -218,7 +220,8 @@ EOF
 
 
 
-
+### [Jenkins Crumb issue](https://github.com/spinnaker/spinnaker/issues/2067#issuecomment-454752402)
+![CRUMB ISSUE](pics/crumb-issue.png)
 
 
 
