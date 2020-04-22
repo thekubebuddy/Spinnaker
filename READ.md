@@ -7,7 +7,7 @@ Table of Content
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
 * [Spinnaker on GKE](#spinnaker-on-gke)
-* [Enabling email notification in Spinnaker](#upgrading-spinnaker-version)
+* [Enabling email notification in Spinnaker](#enabling-email-notification-for-spinnaker)
 
 ###  Artifact Account
 
@@ -179,7 +179,7 @@ hal config provider kubernetes account edit ACCOUNT --add-omit-namespace default
 ```
 
 ### Enabling email notification for Spinnaker
-Run the below configuration in halyard pod
+Save the below configuration file in halyard pod.
 ```
 cat>>EOF<<-/home/spinnaker/.hal/default/profiles/settings-local.js 
 window.spinnakerSettings = window.spinnakerSettings || {};
