@@ -7,7 +7,7 @@ Table of Content
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
 * [Spinnaker on GKE](#spinnaker-on-gke)
-* [Enabling email notification in Spinnaker]
+* [Enabling email notification in Spinnaker](#upgrading-spinnaker-version)
 
 ###  Artifact Account
 
