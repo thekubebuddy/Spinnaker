@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+export PROJECT_ID=
+export IAP_USER=
+export DEPLOYMENT_NAME=spinnaker3
+export HALYARD_VERSION=1.33.0
+export SERVICE_ACCOUNT_NAME="$DEPLOYMENT_NAME-acc-1586329621"
+export STATIC_IP_NAME=$DEPLOYMENT_NAME-external-ip
+export MANAGED_CERT=$DEPLOYMENT_NAME-managed-cert
+export SECRET_NAME=$DEPLOYMENT_NAME-oauth-client-secret
+export DOMAIN_NAME=$DEPLOYMENT_NAME.endpoints.$PROJECT_ID.cloud.goog
