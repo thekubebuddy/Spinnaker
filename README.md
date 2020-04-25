@@ -3,7 +3,7 @@ Table of Content
 
 * [Artifact account](#artifact-account)
 	* [Configuring bitbucket as an artifact account](#configuring-bitbucket-as-an-artifact-account)
-* [Spin CLI](#spin-cli)
+* [Configuring the **Spin CLI** for managing spinnaker pipeline efficiently](#spin-cli)
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
 * [Spinnaker on GKE](#spinnaker-on-gke)
@@ -78,15 +78,12 @@ curl  --request GET --user ishaq4466:<password> https://api.bitbucket.org/2.0/re
 ```
 *\*it happens sometime the artifact account doesn't appear, try to upgrade the spinnaker version and re-try to configure the artifact account*
 
-### Spin CLI
+### Configuring the Spin CLI for managing spinnaker pipeline efficiently
+
 1. CLI configuration
-* Its better to configure spin in a sperate pod within the same namespace where the spinnaker is installed, since the "halyard pod" doesn't have permission to install any packages
 * Before installing "spin", we need to know the spinnaker's-gate svc endpoint, maker sure we have before-hand
-* Spinning an busybox pod in the spinnaker's namespace
-```
-k run lazybox --image smartbuddy/lazybox:v1 --replicas 1 -- /bin/sleep 99999999
-```
-* Run the following bash cmd for installing the "spin"
+
+#### Run the following bash cmd for installing the "spin"
 ```
 wget https://storage.googleapis.com/spinnaker-artifacts/spin/$(curl -s https://storage.googleapis.com/spinnaker-artifacts/spin/latest)/linux/amd64/spin
 
@@ -101,7 +98,8 @@ gate:
   endpoint: http://<spinnaker-gate-endpoint>:8084
 EOF
 ```
-2. Handy-spin-Cmds
+
+#### 2. Handy-spin-Cmds
 ```
 # Listing all the pipelines in Spinnaker within application
 spin pipeline list --application <app-name>
@@ -113,9 +111,10 @@ spin pipeline get --name <pipline-name> --application <app-name>
 spin pipeline delete <pipline-name> --application <app-name>
 
 # Saving a spinnaker template as a pipeline
-spin pipeline save --file template1.tx, configure and deploy
+spin pipeline save --file template1.txt, configure and deploy
 
 ``` 
+
 3. Some useful-bash-hacks
 ```
 # Spliting single json template to many json template with "//" as a delimeter
