@@ -2,12 +2,14 @@ Table of Content
 ===================
 
 * [Artifact account](#artifact-account)
+  * [Configuring github as an artifact account](#configuring-github/gitlab/bitbucket-as-an-artifact-account)
 	* [Configuring bitbucket as an artifact account](#configuring-bitbucket-as-an-artifact-account)
-* [Configuring the **Spin CLI** for managing spinnaker pipeline efficiently](#spin-cli)
+* [Configuring the **Spin CLI** for managing spinnaker pipelines efficiently](#configuring-the-spin-cli-for-managing-spinnaker-pipeline-efficiently)
 * [Upgrading spinnaker version](#upgrading-spinnaker-version)
 * [Spinnaker on minikube](#spinnaker-on-minikube)
 * [Spinnaker on GKE](#spinnaker-on-gke)
 * [Enabling email notification in Spinnaker](#enabling-email-notification-for-spinnaker)
+* [Configuring GCP's IAP authentication mechanism on Spinnaker UI]()
 * [Jenkins crumb issue](#jenkins-crumb-issue)
 
 
@@ -19,7 +21,7 @@ Table of Content
 * For the artifact account configuration, make sure you either generated the authentication token or auth through the username and password,specially for bitbucket you will be needing password.
 * Usecase: The github or any other VCS can be used to store the k8s manifest file which can be used further.
 
-1. Configuring github/gitlab/bitbucket as an Artifact account
+#### Configuring github/gitlab/bitbucket as an Artifact account
 
 ```
 

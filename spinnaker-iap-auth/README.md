@@ -30,7 +30,7 @@ The "configure_endpoint.sh" scripts done all of the hard-work and deploys the fo
 
 Below is the screen-shot for running the configure_endpoint script again:
 
-[!rerun-script](#IMG_1.png)
+![rerun-script](IMG_1.png)
 
 
 
