@@ -120,3 +120,10 @@ bold "Configuring Spinnaker security settings..."
 export HALYARD_POD=$(kubectl get po -l stack=halyard -o jsonpath="{.items[0].metadata.name}")
 echo $HALYARD_POD
 kubectl exec $HALYARD_POD -n spinnaker -- bash -c 'hal deploy apply'
+
+bold "======================================================================================="
+bold "ACTION REQUIRED:"
+bold "  - Navigate to: https://console.developers.google.com/apis/credentials/oauthclient/$CLIENT_ID?project=$PROJECT_ID"
+bold "  - Add \"https://iap.googleapis.com/v1/oauth/clientIds/$CLIENT_ID:handleRedirect\" to your Web client ID as an Authorized redirect URI."
+bold "======================================================================================="
+

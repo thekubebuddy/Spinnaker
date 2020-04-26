@@ -112,11 +112,5 @@ bold "https://console.developers.google.com/apis/credentials?project=$PROJECT_ID
 bold "======================================================================================="
 ./configure_iap.sh
 echo 
-bold "======================================================================================="
-bold "ACTION REQUIRED:"
-bold "  - Navigate to: https://console.developers.google.com/apis/credentials/oauthclient/$CLIENT_ID?project=$PROJECT_ID"
-bold "  - Add https://iap.googleapis.com/v1/oauth/clientIds/$CLIENT_ID:handleRedirect to your Web client ID as an Authorized redirect URI."
-bold "======================================================================================="
-bold "Spinnaker endpoint"
 bold ">>>>>>>> https://$DOMAIN_NAME <<<<<<<<<"
 exit
