@@ -36,7 +36,8 @@ Below is the screen-shot for re-running the configure_endpoint.sh again:
 4. For adding more IAP-secured Web App user, go to the below URL **ADD MEMBER**
 with **Cloud_IAP.IAP_SECURED_WEB_APP_USER role**
 
-# https://console.cloud.google.com/security/iap?project=PROJECT_ID
+
+https://console.cloud.google.com/security/iap?project=PROJECT_ID
 
 ![GCP-IAP](IAP_1.png)
 
