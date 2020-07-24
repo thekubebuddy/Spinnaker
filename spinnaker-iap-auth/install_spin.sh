@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+set -o errexit
+set -o nounset
+set -o pipefail
 
 curl -LO https://storage.googleapis.com/spinnaker-artifacts/spin/$(curl -s https://storage.googleapis.com/spinnaker-artifacts/spin/latest)/linux/amd64/spin
 
