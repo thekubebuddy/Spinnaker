@@ -3,8 +3,8 @@
 bold() {
   echo "* $(tput bold)" "$*" "$(tput sgr0)";
 }
-
-EXISTING_SECRET_NAME=$(kubectl get secret -n spinnaker \
+NAMESPACE="spinnaker"
+EXISTING_SECRET_NAME=$(kubectl get secret -n $NAMESPACE \
   --field-selector metadata.name=="$SECRET_NAME" \
   -o json | jq .items[0].metadata.name)
 
@@ -67,7 +67,7 @@ done
     --iam-account $SA_EMAIL \
     --project $PROJECT_ID
 
-  kubectl create secret generic $SECRET_NAME -n spinnaker --from-literal=client_id=$CLIENT_ID \
+  kubectl create secret generic $SECRET_NAME -n $NAMESPACE --from-literal=client_id=$CLIENT_ID \
     --from-literal=client_secret=$CLIENT_SECRET
 else
   bold "Using existing Kubernetes secret $SECRET_NAME..."
@@ -77,18 +77,18 @@ fi
 envsubst < ./backend-config.yml | kubectl apply -f -
 
 # Associate deck service with backend config.
-kubectl patch svc -n spinnaker spin-deck --patch \
+kubectl patch svc -n s$NAMESPACE spin-deck --patch \
   "[{'op': 'add', 'path': '/metadata/annotations/beta.cloud.google.com~1backend-config', \
   'value':'{\"default\": \"config-default\"}'}]" --type json
 
 # Change spin-deck service to NodePort:
-DECK_SERVICE_TYPE=$(kubectl get service -n spinnaker spin-deck \
+DECK_SERVICE_TYPE=$(kubectl get service -n $NAMESPACE spin-deck \
   --output=jsonpath={.spec.type})
 
 if [ $DECK_SERVICE_TYPE != 'NodePort' ]; then
   bold "Patching spin-deck service to be NodePort instead of $DECK_SERVICE_TYPE..."
 
-  kubectl patch service -n spinnaker spin-deck --patch \
+  kubectl patch service -n $NAMESPACE spin-deck --patch \
     "[{'op': 'replace', 'path': '/spec/type', \
     'value':'NodePort'}]" --type json
 else
@@ -119,7 +119,7 @@ bold "Configuring Spinnaker security settings..."
 ./configure_hal_security.sh
 export HALYARD_POD=$(kubectl get po -l stack=halyard -o jsonpath="{.items[0].metadata.name}")
 echo $HALYARD_POD
-kubectl exec $HALYARD_POD -n spinnaker -- bash -c 'hal deploy apply'
+kubectl exec $HALYARD_POD -n $NAMESPACE -- bash -c 'hal deploy apply'
 
 bold "======================================================================================="
 bold "ACTION REQUIRED:"

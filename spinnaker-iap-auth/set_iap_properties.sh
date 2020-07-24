@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-
+NAMESPACE=spinnaker
 if [ -z $CLIENT_ID ]; then
-  SECRET_JSON=$(kubectl get secret -n spinnaker $SECRET_NAME -o json)
+  SECRET_JSON=$(kubectl get secret -n $NAMESPACE $SECRET_NAME -o json)
 
   export CLIENT_ID=$(echo $SECRET_JSON | jq -r .data.client_id | base64 -d)
   export CLIENT_SECRET=$(echo $SECRET_JSON | jq -r .data.client_secret | base64 -d)
