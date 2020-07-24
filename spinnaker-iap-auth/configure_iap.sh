@@ -154,7 +154,7 @@ kubectl exec $HALYARD_POD -n $NAMESPACE -- bash -c 'hal deploy apply'
 
 bold "======================================================================================="
 bold "ACTION REQUIRED:"
-bold "  - Navigate to:\n https://console.developers.google.com/apis/credentials/oauthclient/$CLIENT_ID?project=$PROJECT_ID"
+bold "  - Navigate to: https://console.developers.google.com/apis/credentials/oauthclient/$CLIENT_ID?project=$PROJECT_ID"
 bold "  - Add \"https://iap.googleapis.com/v1/oauth/clientIds/$CLIENT_ID:handleRedirect\" to your Web client ID as an Authorized redirect URI."
 bold "======================================================================================="
 
