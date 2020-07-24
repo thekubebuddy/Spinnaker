@@ -126,7 +126,7 @@ while [ -z "$BACKEND_SERVICE_ID" ]; do
   sleep 30
 
   export BACKEND_SERVICE_ID=$(gcloud compute backend-services list --project $PROJECT_ID \
-    --filter="iap.oauth2ClientId:$CLIENT_ID AND description:spinnaker/spin-deck" --format="value(id)")
+    --filter="iap.oauth2ClientId:$CLIENT_ID AND description:$NAMESPACE/spin-deck" --format="value(id)")
 done
 
 export AUD_CLAIM=/projects/$PROJECT_NUMBER/global/backendServices/$BACKEND_SERVICE_ID
