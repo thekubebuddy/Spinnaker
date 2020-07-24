@@ -3,6 +3,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+
 bold() {
   echo "* $(tput bold)" "$*" "$(tput sgr0)";
 }
