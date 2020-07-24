@@ -45,3 +45,5 @@ sudo sed -i s:/opt/spinnaker:~/hal/spinnaker:g ~/hal/halyard/bin/halyard
 sed -i 's:rm -rf /opt/halyard:rm -rf ~/hal/halyard:g' ~/hal/update-halyard
 sed -i "s:^  HAL_USER=.*$:  HAL_USER=$(cat ~/hal/spinnaker/config/halyard-user):g" ~/hal/update-halyard
 sed -i s:/etc/bash_completion.d/hal:~/hal/hal_completion: ~/hal/update-halyard
+
+

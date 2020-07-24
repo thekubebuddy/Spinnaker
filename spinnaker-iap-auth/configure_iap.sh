@@ -49,7 +49,7 @@ fi
 
 bold "Assigning required roles to $SERVICE_ACCOUNT_NAME..."
 
-K8S_REQUIRED_ROLES=(cloudbuild.builds.editor container.admin logging.logWriter monitoring.admin pubsub.admin storage.admin)
+K8S_REQUIRED_ROLES=(cloudbuild.builds.editor container.admin logging.logWriter monitoring.admin storage.admin)
 EXISTING_ROLES=$(gcloud projects get-iam-policy --filter bindings.members:$SA_EMAIL $PROJECT_ID \
   --flatten bindings[].members --format="value(bindings.role)")
 
@@ -77,7 +77,7 @@ fi
 envsubst < ./backend-config.yml | kubectl apply -f -
 
 # Associate deck service with backend config.
-kubectl patch svc -n s$NAMESPACE spin-deck --patch \
+kubectl patch svc -n $NAMESPACE spin-deck --patch \
   "[{'op': 'add', 'path': '/metadata/annotations/beta.cloud.google.com~1backend-config', \
   'value':'{\"default\": \"config-default\"}'}]" --type json
 
