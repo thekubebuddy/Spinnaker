@@ -13,9 +13,7 @@ gcurl() {
 bold() {
   echo "* $(tput bold)" "$*" "$(tput sgr0)";
 }
-# Setting up namespace..
 
-NAMESPACE="spinnaker"
 EXISTING_SECRET_NAME=$(kubectl get secret -n $NAMESPACE \
   --field-selector metadata.name=="$SECRET_NAME" \
   -o json | jq .items[0].metadata.name)
@@ -109,17 +107,13 @@ else
 fi
 
 # Create ingress:
-bole "Creating the ingress resource.."
+bold "Creating the ingress resource.."
 bold $(envsubst < ./deck-ingress.yml | kubectl apply -f -)
 
 #source ./set_iap_properties.sh
-if [ -z $CLIENT_ID ]; then
-  SECRET_JSON=$(kubectl get secret -n $NAMESPACE $SECRET_NAME -o json)
-
-  export CLIENT_ID=$(echo $SECRET_JSON | jq -r .data.client_id | base64 -d)
-  export CLIENT_SECRET=$(echo $SECRET_JSON | jq -r .data.client_secret | base64 -d)
-fi
-
+SECRET_JSON=$(kubectl get secret -n $NAMESPACE $SECRET_NAME -o json)
+export CLIENT_ID=$(echo $SECRET_JSON | jq -r .data.client_id | base64 -d)
+export CLIENT_SECRET=$(echo $SECRET_JSON | jq -r .data.client_secret | base64 -d)
 export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
 
 bold "Querying for backend service id..."

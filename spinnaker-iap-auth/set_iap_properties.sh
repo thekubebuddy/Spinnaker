@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-NAMESPACE=spinnaker
 if [ -z $CLIENT_ID ]; then
   SECRET_JSON=$(kubectl get secret -n $NAMESPACE $SECRET_NAME -o json)
 
