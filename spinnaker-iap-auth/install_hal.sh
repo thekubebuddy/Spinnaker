@@ -3,6 +3,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+
+
 HALYARD_DAEMON_PID_FILE=~/hal/halyard/pid
 
 function kill_daemon() {
