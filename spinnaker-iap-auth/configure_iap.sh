@@ -119,7 +119,7 @@ export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(pro
 bold "Querying for backend service id..."
 
 export BACKEND_SERVICE_ID=$(gcloud compute backend-services list --project $PROJECT_ID \
-  --filter="iap.oauth2ClientId:$CLIENT_ID AND description:spinnaker/spin-deck" --format="value(id)")
+  --filter="iap.oauth2ClientId:$CLIENT_ID AND description:$NAMESPACE/spin-deck" --format="value(id)")
 
 while [ -z "$BACKEND_SERVICE_ID" ]; do
   bold "Waiting for backend service to be provisioned..."
