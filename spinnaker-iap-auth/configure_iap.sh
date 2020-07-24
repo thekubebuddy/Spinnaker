@@ -1,8 +1,20 @@
 #!/usr/bin/env bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+gcurl() {
+  curl -s -H "Authorization:Bearer $(gcloud auth print-access-token)" \
+    -H "Content-Type: application/json" -H "Accept: application/json" \
+    -H "X-Goog-User-Project: $PROJECT_ID" $*
+}
+
 
 bold() {
   echo "* $(tput bold)" "$*" "$(tput sgr0)";
 }
+# Setting up namespace..
+
 NAMESPACE="spinnaker"
 EXISTING_SECRET_NAME=$(kubectl get secret -n $NAMESPACE \
   --field-selector metadata.name=="$SECRET_NAME" \
@@ -14,7 +26,8 @@ if [ $EXISTING_SECRET_NAME == 'null' ]; then
   read -p 'Enter your OAuth credentials Client ID: ' CLIENT_ID
   read -p 'Enter your OAuth credentials Client secret: ' CLIENT_SECRET
 
-  cat >~/.spin/config <<EOL
+bold "Setting-up spin CLI with the domain name..."
+cat >~/.spin/config <<EOL
 gate:
   endpoint: https://$DOMAIN_NAME/gate
 
@@ -96,16 +109,33 @@ else
 fi
 
 # Create ingress:
+bole "Creating the ingress resource.."
 bold $(envsubst < ./deck-ingress.yml | kubectl apply -f -)
 
-source ./set_iap_properties.sh
+#source ./set_iap_properties.sh
+if [ -z $CLIENT_ID ]; then
+  SECRET_JSON=$(kubectl get secret -n $NAMESPACE $SECRET_NAME -o json)
 
-gcurl() {
-  curl -s -H "Authorization:Bearer $(gcloud auth print-access-token)" \
-    -H "Content-Type: application/json" -H "Accept: application/json" \
-    -H "X-Goog-User-Project: $PROJECT_ID" $*
-}
+  export CLIENT_ID=$(echo $SECRET_JSON | jq -r .data.client_id | base64 -d)
+  export CLIENT_SECRET=$(echo $SECRET_JSON | jq -r .data.client_secret | base64 -d)
+fi
 
+export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
+
+bold "Querying for backend service id..."
+
+export BACKEND_SERVICE_ID=$(gcloud compute backend-services list --project $PROJECT_ID \
+  --filter="iap.oauth2ClientId:$CLIENT_ID AND description:spinnaker/spin-deck" --format="value(id)")
+
+while [ -z "$BACKEND_SERVICE_ID" ]; do
+  bold "Waiting for backend service to be provisioned..."
+  sleep 30
+
+  export BACKEND_SERVICE_ID=$(gcloud compute backend-services list --project $PROJECT_ID \
+    --filter="iap.oauth2ClientId:$CLIENT_ID AND description:spinnaker/spin-deck" --format="value(id)")
+done
+
+export AUD_CLAIM=/projects/$PROJECT_NUMBER/global/backendServices/$BACKEND_SERVICE_ID
 export IAP_IAM_POLICY_ETAG=$(gcurl -X POST -d "{"options":{"requested_policy_version":3}}" \
   https://iap.googleapis.com/v1beta1/projects/$PROJECT_NUMBER/iap_web/compute/services/$BACKEND_SERVICE_ID:getIamPolicy | jq .etag)
 
@@ -116,14 +146,21 @@ command -v hal >/dev/null 2>&1 && { echo >&2 "Installing the hal cli for configu
 
 
 bold "Configuring Spinnaker security settings..."
-./configure_hal_security.sh
-export HALYARD_POD=$(kubectl get po -l stack=halyard -o jsonpath="{.items[0].metadata.name}")
+~/hal/hal config security api edit --override-base-url https://$DOMAIN_NAME/gate
+~/hal/hal config security ui edit --override-base-url https://$DOMAIN_NAME
+~/hal/hal config security authn iap edit --audience $AUD_CLAIM
+~/hal/hal config security authn iap enable
+
+bold "Security setting successfully done, IAP enabled on spinnaker.."
+
+bold "Deploying the IAP changes within spinnaker"
+export HALYARD_POD=$(kubectl get po -l stack=halyard -n $NAMESPACE -o jsonpath="{.items[0].metadata.name}")
 echo $HALYARD_POD
 kubectl exec $HALYARD_POD -n $NAMESPACE -- bash -c 'hal deploy apply'
 
 bold "======================================================================================="
 bold "ACTION REQUIRED:"
-bold "  - Navigate to: https://console.developers.google.com/apis/credentials/oauthclient/$CLIENT_ID?project=$PROJECT_ID"
+bold "  - Navigate to:\n https://console.developers.google.com/apis/credentials/oauthclient/$CLIENT_ID?project=$PROJECT_ID"
 bold "  - Add \"https://iap.googleapis.com/v1/oauth/clientIds/$CLIENT_ID:handleRedirect\" to your Web client ID as an Authorized redirect URI."
 bold "======================================================================================="
 
