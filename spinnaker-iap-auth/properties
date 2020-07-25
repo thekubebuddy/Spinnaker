@@ -2,7 +2,7 @@
 export PROJECT_ID=
 export IAP_USER=  # mail id for the IAP user configuring
 export NAMESPACE= # spinnaker deployed namespace name
-export DEPLOYMENT_NAME=spinnaker3
+export DEPLOYMENT_NAME=spinnaker-iap
 export HALYARD_VERSION=1.33.0
 export SERVICE_ACCOUNT_NAME="$DEPLOYMENT_NAME-sa-1586329621"
 export STATIC_IP_NAME=$DEPLOYMENT_NAME-external-ip
