@@ -139,17 +139,21 @@ command -v hal >/dev/null 2>&1 && { echo >&2 "Installing the hal cli for configu
 
 
 bold "Configuring Spinnaker security settings..."
-~/hal/hal config security api edit --override-base-url https://$DOMAIN_NAME/gate
-~/hal/hal config security ui edit --override-base-url https://$DOMAIN_NAME
-~/hal/hal config security authn iap edit --audience $AUD_CLAIM
-~/hal/hal config security authn iap enable
 
-bold "Security setting successfully done, IAP enabled on spinnaker.."
+cat <<-EOF>hal-config.sh
+hal config security api edit --override-base-url https://$DOMAIN_NAME/gate
+hal config security ui edit --override-base-url https://$DOMAIN_NAME
+hal config security authn iap edit --audience $AUD_CLAIM
+hal deploy apply
+EOF
 
-bold "Deploying the IAP changes within spinnaker"
+chmod +x ./hal-config.sh
 export HALYARD_POD=$(kubectl get po -l stack=halyard -n $NAMESPACE -o jsonpath="{.items[0].metadata.name}")
 echo $HALYARD_POD
-kubectl exec $HALYARD_POD -n $NAMESPACE -- bash -c 'hal deploy apply'
+kubectl cp -n $NAMESPACE  ./hal-config.sh $HALYARD_POD:/home/spinnaker/  
+kubectl exec $HALYARD_POD -n $NAMESPACE -- bash -c "/home/spinnaker/hal-config.sh"
+
+bold "IAP successfully configured, wait for 5-10min to reflect the changes at the spinnaker service endpoint..."
 
 bold "======================================================================================="
 bold "ACTION REQUIRED:"
