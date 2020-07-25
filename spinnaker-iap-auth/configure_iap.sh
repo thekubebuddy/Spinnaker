@@ -24,6 +24,7 @@ if [ $EXISTING_SECRET_NAME == 'null' ]; then
   read -p 'Enter your OAuth credentials Client secret: ' CLIENT_SECRET
 
 bold "Setting-up spin CLI with the domain name..."
+./install_spin.sh
 cat >~/.spin/config <<EOL
 gate:
   endpoint: https://$DOMAIN_NAME/gate
@@ -144,6 +145,7 @@ cat <<-EOF>hal-config.sh
 hal config security api edit --override-base-url https://$DOMAIN_NAME/gate
 hal config security ui edit --override-base-url https://$DOMAIN_NAME
 hal config security authn iap edit --audience $AUD_CLAIM
+hal config security authn iap enable
 hal deploy apply
 EOF
 
@@ -153,7 +155,7 @@ echo $HALYARD_POD
 kubectl cp -n $NAMESPACE  ./hal-config.sh $HALYARD_POD:/home/spinnaker/  
 kubectl exec $HALYARD_POD -n $NAMESPACE -- bash -c "/home/spinnaker/hal-config.sh"
 
-bold "IAP successfully configured, wait for 5-10min to reflect the changes at the spinnaker service endpoint..."
+bold "IAP successfully configured, wait for atmost 30min to get deck-ingress properly configured and DNS changes to propagate"
 
 bold "======================================================================================="
 bold "ACTION REQUIRED:"
