@@ -1,6 +1,6 @@
-This solution enables the IAP authentication mechanism on the Spinnaker UI, 
-deplpoyed on the GKE.
-** 
+# Google IAP Authentication on Spinnaker
+
+This solution enables the GCP IAP authentication mechanism on the Spinnaker preinstalled on the GKE cluster.
 
 For enabling the IAP follow the given steps:
 
@@ -11,25 +11,24 @@ PROJECT_ID=my-gcp-project-1234
 IAP_USER=octa.cat@gmail.com #The IAP user will be used to configure IAP
 ```
 
-2. Run the "configure_endpoint.sh" script
+2. Run the "setup_iap.sh" script which will do rest of the configuration and resource provisioning work.
 ```
-./configure_endpoint.sh
+./setup_iap.sh
 ```
 
-3. The "configure_endpoint.sh" scripts done all of the hard-work and deploys the following and also makes some changes,
-
-	1. An external ip adress 
-	2. Google service and service endpoint
-	3. Managed SSL certificate for the endpoint
-	4. kubernetes secret from the OAut client id and client secret
+3. The "setup_iap.sh" scripts does all of the hard-work and deploys the following resources:
+	1. A Global static external IP Address.
+	2. Google service endpoint for spinnaker domain.
+	3. Managed SSL certificate for the spinnaker endpoint service.
+	4. kubernetes secret from the OAuth client id and client secret.
 	5. Create a SA and assing the necessary roles to it.
-	6. Change the "spin-deck" service type from custerIP to NodePort
-	7. Deploys the "deck-ingress"
-	8. Configures the halyard pod with the nessacry IAP changes and finally deploys the changes
+	6. Changes the "spin-deck" service type from custerIP to NodePort for the Ingress.
+	7. Deploys the "deck-ingress" with the above provisioned IP address.
+	8. Configures the halyard pod with the nessacry IAP configuration changes and finally deploys the changes
 
 *Make sure to get OAuth client Id and secret for the below following step after step 3*
 
-Below is the screen-shot for re-running the configure_endpoint.sh again:
+Below is the screen-shot for re-running the setup_iap.sh again:
 
 ![rerun-script](IMG_1.png)
 
