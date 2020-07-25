@@ -11,6 +11,22 @@ bold() {
 bold "Invoking the propety file"
 
 source ./properties
+
+REQUIRED_APIS="container.googleapis.com endpoints.googleapis.com iap.googleapis.com monitoring.googleapis.com"
+NUM_REQUIRED_APIS=$(wc -w <<< "$REQUIRED_APIS")
+NUM_ENABLED_APIS=$(gcloud services list --project $PROJECT_ID \
+  --filter="config.name:($REQUIRED_APIS)" \
+  --format="value(config.name)" | wc -l)
+
+if [ $NUM_ENABLED_APIS != $NUM_REQUIRED_APIS ]; then
+  bold "Enabling required APIs ($REQUIRED_APIS) in $PROJECT_ID..."
+  bold "This phase will take a few minutes (progress will not be reported during this operation)."
+  bold
+  bold "Once the required APIs are enabled, the remaining components will be installed and configured. The entire installation may take 10 minutes or more."
+
+  gcloud services --project $PROJECT_ID enable $REQUIRED_APIS
+fi
+
 bold "Checking the domain name max length \"$DOMAIN_NAME\""
 
 DOMAIN_NAME_LENGTH=$(echo -n $DOMAIN_NAME | wc -m)
