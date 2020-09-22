@@ -8,6 +8,8 @@ This solution enables the GCP IAP authentication mechanism on the Spinnaker prei
 * OAuth consent screen properly configured.
 * OAuth client id and client secret generated for the Web application.
 
+
+
 # Usage
 
 1. Set the PROJECT_ID and IAP_USER in the **properties** file in the current dir.
