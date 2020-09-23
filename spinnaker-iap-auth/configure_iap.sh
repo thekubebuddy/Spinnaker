@@ -136,7 +136,7 @@ export IAP_IAM_POLICY_ETAG=$(gcurl -X POST -d "{"options":{"requested_policy_ver
 cat ./iap_policy.json | envsubst | gcurl -X POST -d @- \
   https://iap.googleapis.com/v1beta1/projects/$PROJECT_NUMBER/iap_web/compute/services/$BACKEND_SERVICE_ID:setIamPolicy
 
-command -v hal >/dev/null 2>&1 && { echo >&2 "Installing the hal cli for configuring spinnaker security settings.." && ./install_hal.sh --version $HALYARD_VERSION; }
+# command -v hal >/dev/null 2>&1 && { echo >&2 "Installing the hal cli for configuring spinnaker security settings.." && ./install_hal.sh --version $HALYARD_VERSION; }
 
 
 bold "Configuring Spinnaker security settings..."
