@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+export PROJECT_ID="mydomain-playground"
+export IAP_USER="ishaq.shaikh@mydomain.com"  # mail id for the IAP user configuring
+export NAMESPACE="spinnaker" # spinnaker deployed namespace name
+export DEPLOYMENT_NAME="spinnaker-iap"
+export SERVICE_ACCOUNT_NAME="$DEPLOYMENT_NAME-sa-1586329621"
+export STATIC_IP_NAME="spin-deck-ing-ext-ip" #$DEPLOYMENT_NAME-ext-ip # static ip name to be created for the ingress
+export MANAGED_CERT="spinnaker-ing-cert" # Cert file name for the terminating TLS on ingress 
+export SECRET_NAME=$DEPLOYMENT_NAME-oauth-client-secret
+export HOST_NAME="spin-deck.mydomaininc.org" #hostname name for mapping in with the ingress host

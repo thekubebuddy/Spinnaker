@@ -1,0 +1,26 @@
+---
+apiVersion: networking.gke.io/v1beta1
+kind: ManagedCertificate
+metadata:
+  name: $MANAGED_CERT
+spec:
+  domains:
+    - $HOST_NAME
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: deck-ingress
+  namespace: $NAMESPACE
+  annotations:
+    # ingress.gcp.kubernetes.io/pre-shared-cert: $MANAGED_CERT
+    networking.gke.io/managed-certificates: $MANAGED_CERT
+    kubernetes.io/ingress.global-static-ip-name: $STATIC_IP_NAME
+spec:
+  rules:
+  - host: $HOST_NAME
+    http:
+      paths:
+        - backend: 
+            serviceName: spin-deck
+            servicePort: 9000
