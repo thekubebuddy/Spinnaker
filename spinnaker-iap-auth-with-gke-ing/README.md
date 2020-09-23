@@ -12,7 +12,7 @@ This solution deployes the spinnaker on GKE as well as configures the IAP auth m
 
 
 ## Usage
-**Note: Please do read the configurational echo comments properly, specially the last `ACTION REQUIRED` when the script terminate**
+**Note: Please do read the configurational echo comments properly, specially the last `ACTION REQUIRED` when the script execution end.**
 
 
 #### Step 1. Deploying the spinnaker on GKE (if not deployed)
@@ -22,12 +22,13 @@ $ kubectl config set-context --current --namespace=spinnaker
 $ kubectl apply -f spinstack-on-gke.yaml
 ```
 
-* The state of the world before running the script, must be seen as follows
+* The state of the world before running the script, should be like as follows
+
 ![spinnaker-1](./screenshots/spinnaker-deployed.png)
 
 
 
-#### Step 2. Setting up the **properties** file in the current dir.
+#### Step 2. Setting up the **"properties"** file in the current dir.
 For example,
 ```
 ...
@@ -57,7 +58,7 @@ export HOST_NAME="spin-deck.mydomain.com" #hostname name for mapping in with the
 ./setup_iap.sh
 ```
 
-#### Step 5. Once the spinnaker ingress comes up, the following will be the result with the ingress enabled with TLS.
+#### Step 5. Once the Spinnaker's Deck ingress comes up, the following will be the result with the TLS enabled on ingress.
 ![final-result](./screenshots/end-result.png)
 
 
